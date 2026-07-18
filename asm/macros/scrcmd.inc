@@ -5354,6 +5354,11 @@
     CallCommonScript 0x809
     .endm
 
+    .macro SetPlayerOutfit outfitVar
+    .short SCRCMD_SETPLAYEROUTFIT
+    .short \outfitVar
+    .endm
+
     .text
     .globl _start
 _start:

@@ -30,6 +30,7 @@ static BillboardList *FindFirstFreeBillboardList(void);
 static void BillboardList_Reset(BillboardList *list);
 static void BillboardList_Draw(BillboardList *list);
 static void UpdateTexPlttAddressesForCurrentFrame(Billboard *billboard);
+static u8 ResolvePlttIdx(const Billboard *billboard, const BillboardTexPlttIndex *indexes);
 static void UpdateModelTextureAddresses(NNSG3dResMdl *model, const NNSG3dResTex *texture, u8 textureIdx);
 static void UpdateMaterialTextureAddresses(NNSG3dResMat *material, const NNSG3dResDictTexToMatIdxData *texToMatDict, u32 textureAddress);
 static void UpdateModelPlttAddresses(NNSG3dResMdl *model, const NNSG3dResTex *texture, u8 plttIdx);
@@ -93,6 +94,7 @@ void Billboard_Reset(Billboard *billboard)
     billboard->tex4x4Key = NNS_GFD_ALLOC_ERROR_TEXKEY;
     billboard->plttKey = NNS_GFD_ALLOC_ERROR_PLTTKEY;
     billboard->vramTransfer = NULL;
+    billboard->plttVariant = 0;
 
     VEC_Set(&billboard->pos, 0, 0, 0);
     VEC_Set(&billboard->scale, FX32_ONE, FX32_ONE, FX32_ONE);
@@ -260,11 +262,11 @@ static void BillboardList_Draw(BillboardList *list)
 
             Billboard_SetKeysAndBindModelSet(billboard);
 
-            if (billboard->state == BILLBOARD_STATE_ACTIVE) {
-                UpdateTexPlttAddressesForCurrentFrame(billboard);
-            } else if (billboard->state == BILLBOARD_STATE_VRAM_TRANSFER) {
+            if (billboard->state == BILLBOARD_STATE_VRAM_TRANSFER) {
                 Billboard_TryRequestVRAMTransfer(billboard);
             }
+
+            UpdateTexPlttAddressesForCurrentFrame(billboard);
 
             rotMatrix = billboard->rotMatrix;
 
@@ -661,12 +663,33 @@ void Billboard_SetCallback(Billboard *billboard, BillboardCallback callback, voi
     billboard->callback = callback;
 }
 
+static u8 ResolvePlttIdx(const Billboard *billboard, const BillboardTexPlttIndex *indexes)
+{
+    u8 plttIdx = indexes->plttIdx + billboard->plttVariant;
+
+    if (NNS_G3dGetPlttDataByIdx(billboard->animTexture, plttIdx) == NULL) {
+        plttIdx = indexes->plttIdx;
+    }
+
+    return plttIdx;
+}
+
 static void UpdateTexPlttAddressesForCurrentFrame(Billboard *billboard)
 {
     BillboardTexPlttIndex indexes = BillboardGfxSequence_GetTexPlttIndexAt(&billboard->gfxSequence, billboard->frameNum >> FX32_SHIFT);
 
     UpdateModelTextureAddresses(billboard->model, billboard->animTexture, indexes.textureIdx);
-    UpdateModelPlttAddresses(billboard->model, billboard->animTexture, indexes.plttIdx);
+    UpdateModelPlttAddresses(billboard->model, billboard->animTexture, ResolvePlttIdx(billboard, &indexes));
+}
+
+void Billboard_SetPlttVariant(Billboard *billboard, u8 plttVariant)
+{
+    billboard->plttVariant = plttVariant;
+}
+
+u8 Billboard_GetPlttVariant(const Billboard *billboard)
+{
+    return billboard->plttVariant;
 }
 
 static void UpdateModelTextureAddresses(NNSG3dResMdl *model, const NNSG3dResTex *texture, u8 textureIdx)

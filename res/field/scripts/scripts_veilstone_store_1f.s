@@ -3,6 +3,11 @@
 
 #define LOCAL_VAR_ACCESSORY_ID VAR_0x8004
 #define LOCAL_VAR_COUNT        VAR_0x8005
+#define LOCAL_VAR_OUTFIT       VAR_0x8006
+#define LOCAL_VAR_OUTFIT_FLAG  VAR_0x8007
+#define LOCAL_VAR_OWNED        VAR_0x8008
+
+#define OUTFIT_PRICE 3000
 
     ScriptEntry VeilstoneStore1F_Attendant
     ScriptEntry VeilstoneStore1F_MiddleAgedMan
@@ -12,6 +17,7 @@
     ScriptEntry VeilstoneStore1F_BgSign
     ScriptEntry VeilstoneStore1F_Directory
     ScriptEntry VeilstoneStore1F_Socialite
+    ScriptEntry VeilstoneStore1F_Stylist
     ScriptEntryEnd
 
 VeilstoneStore1F_Attendant:
@@ -80,5 +86,71 @@ VeilstoneStore1F_Socialite_Chimchar:
 VeilstoneStore1F_Socialite_Piplup:
     SetVar LOCAL_VAR_ACCESSORY_ID, ACCESSORY_CHIMCHAR_MASK
     Return
+
+VeilstoneStore1F_Stylist:
+    PlaySE SEQ_SE_CONFIRM
+    LockAll
+    FacePlayer
+    ShowMoney 20, 2
+    Message VeilstoneStore1F_Text_StylistDiscoverANewYou
+    WaitButton
+    Message VeilstoneStore1F_Text_StylistWhichOutfit
+
+VeilstoneStore1F_Stylist_Menu:
+    InitLocalTextMenu 1, 1, 0, VAR_RESULT, TRUE
+    AddMenuEntryImm VeilstoneStore1F_Text_OutfitOriginal, 0
+    AddMenuEntryImm VeilstoneStore1F_Text_OutfitRed, 1
+    AddMenuEntryImm VeilstoneStore1F_Text_OutfitGreen, 2
+    AddMenuEntryImm VeilstoneStore1F_Text_OutfitPurple, 3
+    AddMenuEntryImm VeilstoneStore1F_Text_OutfitOrange, 4
+    AddMenuEntryImm VeilstoneStore1F_Text_OutfitGrey, 5
+    AddMenuEntryImm VeilstoneStore1F_Text_OutfitCancel, 6
+    ShowMenu
+    GoToIfGe VAR_RESULT, 6, VeilstoneStore1F_Stylist_MaybeNextTime
+    SetVar LOCAL_VAR_OUTFIT, VAR_RESULT
+    GoToIfEq LOCAL_VAR_OUTFIT, 0, VeilstoneStore1F_Stylist_AlreadyOwned
+    SetVar LOCAL_VAR_OUTFIT_FLAG, FLAG_OUTFIT_OWNED_0
+    AddVar LOCAL_VAR_OUTFIT_FLAG, LOCAL_VAR_OUTFIT
+    CheckFlagFromVar LOCAL_VAR_OUTFIT_FLAG, LOCAL_VAR_OWNED
+    GoToIfEq LOCAL_VAR_OWNED, TRUE, VeilstoneStore1F_Stylist_AlreadyOwned
+    Message VeilstoneStore1F_Text_StylistThatOneIs
+    ShowYesNoMenu VAR_RESULT
+    GoToIfNe VAR_RESULT, MENU_YES, VeilstoneStore1F_Stylist_MaybeNextTime
+    GoToIfNotEnoughMoney OUTFIT_PRICE, VeilstoneStore1F_Stylist_NotEnoughMoney
+    AddToGameRecord RECORD_MONEY_SPENT, OUTFIT_PRICE
+    RemoveMoney2 OUTFIT_PRICE
+    UpdateMoneyDisplay
+    PlaySE SEQ_SE_DP_REGI
+    WaitSE SEQ_SE_DP_REGI
+    SetFlagFromVar LOCAL_VAR_OUTFIT_FLAG
+    Message VeilstoneStore1F_Text_StylistLooksWonderful
+    GoTo VeilstoneStore1F_Stylist_Wear
+
+VeilstoneStore1F_Stylist_AlreadyOwned:
+    Message VeilstoneStore1F_Text_StylistChangedIntoIt
+
+VeilstoneStore1F_Stylist_Wear:
+    SetPlayerOutfit LOCAL_VAR_OUTFIT
+    WaitButton
+    CloseMessage
+    HideMoney
+    ReleaseAll
+    End
+
+VeilstoneStore1F_Stylist_NotEnoughMoney:
+    Message VeilstoneStore1F_Text_StylistNotEnoughMoney
+    WaitButton
+    CloseMessage
+    HideMoney
+    ReleaseAll
+    End
+
+VeilstoneStore1F_Stylist_MaybeNextTime:
+    Message VeilstoneStore1F_Text_StylistMaybeNextTime
+    WaitButton
+    CloseMessage
+    HideMoney
+    ReleaseAll
+    End
 
     .balign 4, 0

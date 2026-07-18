@@ -57,6 +57,99 @@
         "4F: Poké Dolls & Goods\r",
         "5F: Rooftop Plaza"
       ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_StylistDiscoverANewYou",
+      "en_US": [
+        "Welcome! Ready to discover a new you?\r",
+        "I restyle Trainers’ outfits. A change of\n",
+        "color does wonders for the spirit!"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_StylistWhichOutfit",
+      "en_US": [
+        "Which look shall we try?"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_StylistThatOneIs",
+      "en_US": [
+        "Oh, excellent taste!\r",
+        "That outfit is $3000.\n",
+        "Shall I wrap it up for you?"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_StylistLooksWonderful",
+      "en_US": [
+        "There! It looks wonderful on you.\r",
+        "Come back anytime you’d like to\n",
+        "change again, that one’s yours now."
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_StylistChangedIntoIt",
+      "en_US": [
+        "You already own that one, so it’s on\n",
+        "the house. There you go!"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_StylistNotEnoughMoney",
+      "en_US": [
+        "Oh dear... you don’t have enough\n",
+        "money for that one."
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_StylistMaybeNextTime",
+      "en_US": [
+        "No trouble at all!\n",
+        "Do come see me another time."
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_OutfitOriginal",
+      "en_US": [
+        "Blue (original)"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_OutfitRed",
+      "en_US": [
+        "Red"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_OutfitGreen",
+      "en_US": [
+        "Green"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_OutfitPurple",
+      "en_US": [
+        "Purple"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_OutfitOrange",
+      "en_US": [
+        "Orange"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_OutfitGrey",
+      "en_US": [
+        "Grey"
+      ]
+    },
+    {
+      "id": "VeilstoneStore1F_Text_OutfitCancel",
+      "en_US": [
+        "Cancel"
+      ]
     }
   ]
 }
